@@ -37,7 +37,7 @@ std::string limpiar_string(const std::string & cadena_a_limpiar){
     return cadena_a_limpiar.substr(start, end - start + 1);
 }
 
-std::vector<TipoVariable> obtener_parametros_por_caso(const std::string & ruta_archivo){
+std::vector<TipoVariable> obtener_parametros_por_caso(const std::filesystem::path & ruta_archivo){
     std::vector<TipoVariable> lista_parametros;
 
     std::ifstream archivo(ruta_archivo);
@@ -73,7 +73,7 @@ std::vector<TipoVariable> obtener_parametros_por_caso(const std::string & ruta_a
             lista_parametros.push_back(valor_limpio);
         }else if(tipo_valor == "long"){
             try{
-                lista_parametros.push_back(std::stoi(valor_limpio));
+                lista_parametros.push_back(std::stol(valor_limpio));
             }catch (const std::exception & e){
                 std::cerr << "Error al convertir a long " << valor_limpio << std::endl;
             }
