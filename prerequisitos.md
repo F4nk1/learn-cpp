@@ -26,3 +26,16 @@ sudo pacman -S base-devel
 # Windows
 
 Para windows pueden usar la siguiente referencia para instalar correctamente [como instalar c++ en windows](https://www.fdi.ucm.es/profesor/luis/fp/devtools/mingw.html)
+
+## Wsl (Windows for linux)
+
+```bash
+wsl --install
+```
+- Reiniciar dispositivo
+- Crear usuario y contraseña 
+
+```bash
+sudo apt update
+sudo apt install build-essential -y
+```
