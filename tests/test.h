@@ -9,18 +9,18 @@ T extraer(const TipoVariable& variable){
     return std::get<T>(variable);
 }
 
-template<typename Retorno,typename F, size_t... Is, typename... Args>
-Retorno invocar_impl(F func, const std::vector<TipoVariable> & variables, std::index_sequence<Is...>){
-    func(extraer<Args>(variables[Is])...);
+template<typename Retorno, typename... Args, size_t... Is>
+Retorno invocar_impl(Retorno (*func)(Args...), const std::vector<TipoVariable> & variables, std::index_sequence<Is...>){
+    return func(extraer<Args>(variables[Is])...);
 }
 
 template<typename Retorno, typename... Args>
 Retorno llamar_funcion(Retorno(*func)(Args...), const std::vector<TipoVariable>& variables){
     if (variables.size() < sizeof...(Args)) {
-        std::cerr << "Error: Falta parametros en la funcion" << std::endl;
-        return;
+        throw std::runtime_error("Error: El vector no tiene suficientes parametros para la funcion.");
+
     }
-    invocar_impl<Retorno, Args...>(func, variables, std::make_index_sequence<sizeof...(Args)>{});
+    return invocar_impl<Retorno, Args...>(func, variables, std::make_index_sequence<sizeof...(Args)>{});
 
 }
 
@@ -136,7 +136,7 @@ std::pair<bool, std::string> test_function(std::string ruta_direccion, Retorno(*
     
     std::vector<std::vector<TipoVariable>> parametros_y_respuestas = obtener_parametros_y_respuesta(ruta_direccion); // TODO
 
-    for (int test = 1; test <= (int) parametros_y_respuestas.size(); ++test){
+    for (int test = 0; test < (int) parametros_y_respuestas.size(); ++test){
         std::vector<TipoVariable> caso_prueba = parametros_y_respuestas[test];
         
         if (caso_prueba.empty()) continue;
