@@ -1,7 +1,45 @@
 #pragma once
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <queue>
+#include <stack>
+#include <deque>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <utility>
+#include <tuple>
+#include <cmath>
+#include <cstring>
+#include <cassert>
+#include <climits>
+#include <cfloat>
+#include <iomanip> 
+#include <sstream> 
+#include <variant>
+#include <fstream>
+#include <stdexcept>
+#include <utility>
+#include <filesystem>
+#include <type_traits>
+#include <type_traits>
 
 using TipoVariable = std::variant<int, long, std::string, std::vector<int>>;
+
+inline std::ostream& operator<<(std::ostream& os, const TipoVariable& variable){
+    std::visit([&os](auto&& args){
+        using Temporal = std::decay_t<decltype(args)>;
+        if constexpr (std::is_same_v<Temporal, std::vector<int>>){
+            for (int arg: args) os << arg << " ";
+        }else{
+            os << args;
+        }
+    }, variable);
+    return os;
+}
 
 // --- INICIO DEL INTERNO: NO TOCAR PARA NADA ESTA PARTE --- //
 template<typename T>
@@ -124,17 +162,18 @@ inline bool verificar_si_existe_ruta(const std::string & ruta_direccion){
     return f.good();
 }
 
+
 template<typename Retorno, typename... Args>
-std::pair<bool, std::string> test_function(std::string ruta_direccion, Retorno(*funcion)(Args...)){
+void test_function(std::string ruta_direccion, Retorno(*funcion)(Args...)){
     bool existe_ruta = verificar_si_existe_ruta(ruta_direccion);
     if (!existe_ruta){
         std::pair<bool, std::string> mensaje = {false, "Ruta determinada no existe"};
-        return mensaje;
+        std::cout << "Ruta determinada no existe" << std::endl;
     }
 
     int numero_casos_pruebas = obtener_numero_casos_pruebas(ruta_direccion);
     
-    std::vector<std::vector<TipoVariable>> parametros_y_respuestas = obtener_parametros_y_respuesta(ruta_direccion); // TODO
+    std::vector<std::vector<TipoVariable>> parametros_y_respuestas = obtener_parametros_y_respuesta(ruta_direccion);
 
     for (int test = 0; test < (int) parametros_y_respuestas.size(); ++test){
         std::vector<TipoVariable> caso_prueba = parametros_y_respuestas[test];
@@ -149,9 +188,16 @@ std::pair<bool, std::string> test_function(std::string ruta_direccion, Retorno(*
         if (std::get<Retorno>(respuesta_esperada) == resultado_obtenido){
             continue;
         }else{
-            return {false, "Fallo en un caso"};
+            std::cout << "Fallo en el test " << (test + 1) << std::endl;
+            std::cout << "Parametros: " << std::endl;
+            for (size_t elementos_args = 0; elementos_args < (int) caso_prueba.size(); ++elementos_args){
+                std::cout << caso_prueba[elementos_args] << std::endl;
+            }
+            std::cout << "Valor esperado: " << respuesta_esperada << std::endl;
+            std::cout << "Valor obtenido: " << resultado_obtenido << std::endl;
+            return;
         }
     }
 
-    return {true, "Todos los test salieron correctamente :)"};
+    std::cout << "Todos los tests salieron correctamente :)" << std::endl;
 }
