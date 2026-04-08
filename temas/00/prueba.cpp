@@ -19,7 +19,7 @@ int suma(int a, int b){
 
 // Parte donde inicia el ejecutable
 int main(){
-    test_function("../../tests/00_00", suma);
+    test_function("tests/00_00", suma);
 }
 
 /*

@@ -158,8 +158,8 @@ int obtener_numero_casos_pruebas(const std::string & ruta_carpeta){
 }
 
 inline bool verificar_si_existe_ruta(const std::string & ruta_direccion){
-    std::ifstream f(ruta_direccion.c_str());
-    return f.good();
+    return std::filesystem::exists(ruta_direccion) &&
+           std::filesystem::is_directory(ruta_direccion);
 }
 
 
@@ -169,9 +169,10 @@ void test_function(std::string ruta_direccion, Retorno(*funcion)(Args...)){
     if (!existe_ruta){
         std::pair<bool, std::string> mensaje = {false, "Ruta determinada no existe"};
         std::cout << "Ruta determinada no existe" << std::endl;
+        return;
     }
 
-    int numero_casos_pruebas = obtener_numero_casos_pruebas(ruta_direccion);
+    //int numero_casos_pruebas = obtener_numero_casos_pruebas(ruta_direccion);
     
     std::vector<std::vector<TipoVariable>> parametros_y_respuestas = obtener_parametros_y_respuesta(ruta_direccion);
 
@@ -190,7 +191,7 @@ void test_function(std::string ruta_direccion, Retorno(*funcion)(Args...)){
         }else{
             std::cout << "Fallo en el test " << (test + 1) << std::endl;
             std::cout << "Parametros: " << std::endl;
-            for (size_t elementos_args = 0; elementos_args < (int) caso_prueba.size(); ++elementos_args){
+            for (size_t elementos_args = 0; elementos_args < caso_prueba.size(); ++elementos_args){
                 std::cout << caso_prueba[elementos_args] << std::endl;
             }
             std::cout << "Valor esperado: " << respuesta_esperada << std::endl;

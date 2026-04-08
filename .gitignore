@@ -6,4 +6,6 @@
 
 *.exe
 
-*/bits
+bits/
+
+bin/
