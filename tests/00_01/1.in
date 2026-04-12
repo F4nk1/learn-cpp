@@ -1,0 +1,3 @@
+a, int, 32;
+b, int, 16;
+ans, int, 2;

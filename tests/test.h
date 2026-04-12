@@ -184,19 +184,26 @@ void test_function(std::string ruta_direccion, Retorno(*funcion)(Args...)){
         TipoVariable respuesta_esperada = caso_prueba.back();
         caso_prueba.pop_back();
 
-        Retorno resultado_obtenido = llamar_funcion(funcion, caso_prueba);
+        try{
+            Retorno resultado_obtenido = llamar_funcion(funcion, caso_prueba);
 
-        if (std::get<Retorno>(respuesta_esperada) == resultado_obtenido){
-            continue;
-        }else{
-            std::cout << "Fallo en el test " << (test + 1) << std::endl;
-            std::cout << "Parametros: " << std::endl;
-            for (size_t elementos_args = 0; elementos_args < caso_prueba.size(); ++elementos_args){
-                std::cout << caso_prueba[elementos_args] << std::endl;
+            if (std::get<Retorno>(respuesta_esperada) == resultado_obtenido){
+                continue;
+            }else{
+                std::cout << "Fallo en el test " << (test + 1) << std::endl;
+                std::cout << "Parametros: " << std::endl;
+                for (size_t elementos_args = 0; elementos_args < caso_prueba.size(); ++elementos_args){
+                    std::cout << caso_prueba[elementos_args] << std::endl;
+                }
+                std::cout << "Valor esperado: " << respuesta_esperada << std::endl;
+                std::cout << "Valor obtenido: " << resultado_obtenido << std::endl;
+                return;
             }
-            std::cout << "Valor esperado: " << respuesta_esperada << std::endl;
-            std::cout << "Valor obtenido: " << resultado_obtenido << std::endl;
-            return;
+        } catch (const std::bad_variant_access& e){
+            std::cout << "Error en el tipo de datos esperado, no coincide con la variable de la funcion" << std::endl;
+        } catch (const std::exception & e){
+            std::cout << "Error en tiempo de ejecucion" << std::endl;
+            std::cout << e.what() << std::endl;
         }
     }
 

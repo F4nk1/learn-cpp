@@ -1,0 +1,3 @@
+a, int, 51;
+b, int, 0;
+ans, int, -1;
